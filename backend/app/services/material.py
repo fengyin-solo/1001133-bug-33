@@ -12,6 +12,18 @@ ACTION_RULES = {"领用材料": "已领用", "送检材料": "待检测", "退�
 NEGATIVE_ACTIONS = []
 
 
+def _with_available(row: dict[str, Any]) -> dict[str, Any]:
+    """物资清单统一附带可用数量（库存-预占），让预占/释放结果在列表里可见。"""
+    view = dict(row)
+    try:
+        stock = int(row.get("库存数量", 0))
+        reserved = int(row.get("预占数量", 0))
+    except (TypeError, ValueError):
+        stock, reserved = 0, 0
+    view["可用数量"] = stock - reserved
+    return view
+
+
 class MaterialService:
     def list_entries(
         self,
@@ -28,10 +40,11 @@ class MaterialService:
             rows = [row for row in rows if row.get("status") == status]
         total = len(rows)
         start = max(page - 1, 0) * size
-        return rows[start:start + size], total
+        return [_with_available(row) for row in rows[start:start + size]], total
 
     def get_entry(self, entry_id: int) -> dict[str, Any] | None:
-        return store.find(MODULE, entry_id)
+        row = store.find(MODULE, entry_id)
+        return _with_available(row) if row else None
 
     def create_entry(self, values: dict[str, Any]) -> tuple[dict[str, Any] | None, list[str]]:
         missing = [field for field in REQUIRED_FIELDS if not str(values.get(field) or "").strip()]

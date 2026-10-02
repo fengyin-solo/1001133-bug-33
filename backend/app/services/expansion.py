@@ -8,8 +8,11 @@ from app.store import store
 MODULE = "expansion"
 REQUIRED_FIELDS = ["缝编号", "所属桥梁", "缝类型"]
 STATUS_ORDER = ["正常", "堵塞", "锚固损坏", "已更换"]
-ACTION_RULES = {"清理堵塞": "正常", "修补锚固": "正常", "更换伸缩缝": "已更换"}
+# 「更换伸缩缝」不再走单缝动作：成组更换统一由 replacement 编排提交，
+# 避免台账、工作台、物资三处各自推进导致进度不一致。
+ACTION_RULES = {"清理堵塞": "正常", "修补锚固": "正常"}
 NEGATIVE_ACTIONS = []
+REPLACEMENT_GUIDE = "更换伸缩缝请走「成组更换」按施工批次提交，不再支持单缝直接更换"
 
 
 class ExpansionService:

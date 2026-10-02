@@ -70,7 +70,7 @@ import { request } from '@/api/client'
 type Row = Record<string, string | number | null>
 
 const ENDPOINT = '/api/material'
-const columns = ["材料编号", "材料名称", "材料类别", "规格型号", "供应商", "进场日期", "存放地点", "材料状态"]
+const columns = ["材料编号", "材料名称", "材料类别", "规格型号", "供应商", "进场日期", "存放地点", "库存数量", "预占数量", "可用数量", "材料状态"]
 const actions = ["领用材料", "送检材料", "退还不合格"]
 const statuses = ["在库", "已领用", "待检测", "不合格"]
 const stats = [{"label": "在库材料", "value": 0}, {"label": "待检测材料", "value": 0}, {"label": "不合格材料", "value": 0}]
